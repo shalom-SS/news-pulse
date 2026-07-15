@@ -1,6 +1,6 @@
 # News Pulse
 
-**Live:** _deploying — link goes here once it's up_
+**Live:** [news-pulse-dun.vercel.app](https://news-pulse-dun.vercel.app)
 
 A research tool that searches news on any topic, filters results down to a curated list of trusted sources, and ranks what's left by a transparent quality score.
 
