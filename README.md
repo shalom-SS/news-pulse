@@ -1,5 +1,7 @@
 # News Pulse
 
+**Live:** _deploying — link goes here once it's up_
+
 A research tool that searches news on any topic, filters results down to a curated list of trusted sources, and ranks what's left by a transparent quality score.
 
 Built as a small Node.js web app: a backend fetches and parses Google News RSS (browsers can't fetch RSS directly), the frontend renders results as scannable, editorial-style cards. No database, no accounts, no continuous monitoring — every search fetches fresh.
@@ -47,13 +49,22 @@ Results are sorted highest score first.
 - Relevance matching is literal/word-based, not semantic — it won't catch every possible phrasing of a concept, only the ones in the synonym list.
 - No caching or persistence — every search re-fetches from Google News live.
 
-## Running it
+## Running it locally
 
 ```
 node server.js
 ```
 
 Then open `http://localhost:3000`. No dependencies to install — it's plain Node.js (built-in `http`/`https` modules only).
+
+## Architecture
+
+The search pipeline (fetch → filter → score → sort → trend data) lives in [`search.js`](search.js), shared by two entrypoints:
+
+- [`server.js`](server.js) — a plain Node `http` server, used for local development. Serves the frontend from `public/` and handles `/api/search` directly.
+- [`api/search.js`](api/search.js) — a Vercel serverless function, used in production. Same pipeline, deployed as `/api/search` on Vercel.
+
+This keeps local dev dependency-free while still deploying cleanly to Vercel's serverless model.
 
 ---
 
