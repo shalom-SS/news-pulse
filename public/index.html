@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News Pulse</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header class="masthead">
+      <h1>News&nbsp;Pulse</h1>
+      <p class="tagline">Filtered to your trusted sources, ranked by quality.</p>
+    </header>
+
+    <form id="search-form">
+      <input type="text" id="search-input" placeholder="Search a topic&hellip;" autocomplete="off" required>
+      <select id="date-range" aria-label="Date range">
+        <option value="7">Last 7 days</option>
+        <option value="30" selected>Last 30 days</option>
+        <option value="90">Last 3 months</option>
+      </select>
+      <button type="submit">Search</button>
+    </form>
+
+    <div id="summary" class="summary" hidden>
+      <p id="pickup" class="pickup"></p>
+      <p id="status" class="status"></p>
+    </div>
+
+    <div id="trends" class="trends" hidden>
+      <section class="trend-block">
+        <div class="trend-head">
+          <h2>Momentum</h2>
+          <span id="momentum-verdict" class="verdict"></span>
+        </div>
+        <div id="momentum-chart" class="momentum-chart"></div>
+        <div id="momentum-axis" class="momentum-axis"></div>
+      </section>
+
+      <section class="trend-block">
+        <div class="trend-head">
+          <h2>Coverage by country</h2>
+        </div>
+        <div id="country-chart" class="country-chart"></div>
+      </section>
+    </div>
+
+    <ul id="results"></ul>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

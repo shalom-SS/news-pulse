@@ -1,0 +1,11 @@
+{
+  "name": "news-pulse",
+  "version": "1.0.0",
+  "description": "Search news, filtered to trusted sources, ranked by a transparent quality score.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT"
+}

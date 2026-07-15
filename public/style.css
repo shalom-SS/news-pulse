@@ -1,0 +1,394 @@
+:root {
+  --bg: #fbfbf9;
+  --surface: #ffffff;
+  --ink: #14171a;
+  --ink-soft: #4a5157;
+  --ink-faint: #878e94;
+  --line: #e6e4dd;
+  --line-strong: #d8d5cc;
+  --accent: #0f5e5e;
+  --accent-soft: #e7f0ef;
+  --muted-bar: #d3d0c6;
+  --negative: #9c4a3c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 4rem;
+}
+
+/* --- Masthead --- */
+
+.masthead {
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.masthead h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  font-size: 1.9rem;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.tagline {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--ink-faint);
+}
+
+/* --- Search --- */
+
+#search-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#search-input {
+  flex: 1;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.98rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+}
+
+#search-input:focus,
+#date-range:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+#date-range {
+  padding: 0.6rem 0.55rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+}
+
+button {
+  padding: 0.6rem 1.15rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0c4f4f;
+}
+
+button:disabled {
+  background: var(--ink-faint);
+  cursor: default;
+}
+
+/* --- Summary --- */
+
+.summary {
+  margin-bottom: 1.5rem;
+}
+
+.pickup {
+  margin: 0 0 0.2rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.pickup strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.status {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+}
+
+/* --- Trends --- */
+
+.trends {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+@media (max-width: 620px) {
+  .trends {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.trend-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.trend-block h2 {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.verdict {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.verdict.rising {
+  color: var(--accent);
+}
+
+.verdict.fading {
+  color: var(--negative);
+}
+
+.verdict.steady {
+  color: var(--ink-faint);
+}
+
+/* Momentum bar chart */
+
+.momentum-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 64px;
+}
+
+.momentum-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  height: 100%;
+  cursor: default;
+}
+
+.momentum-stack {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 100%;
+  border-radius: 1.5px;
+  overflow: hidden;
+}
+
+.momentum-seg-trusted {
+  background: var(--accent);
+  width: 100%;
+}
+
+.momentum-seg-other {
+  background: var(--muted-bar);
+  width: 100%;
+}
+
+.momentum-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.4rem;
+  font-size: 0.68rem;
+  color: var(--ink-faint);
+}
+
+/* Country coverage bars */
+
+.country-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.country-row {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+}
+
+.country-name {
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.country-track {
+  height: 6px;
+  background: var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.country-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+.country-count {
+  color: var(--ink-faint);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Results --- */
+
+#results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  display: flex;
+  gap: 1.1rem;
+  padding: 1.4rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.card:first-child {
+  border-top: none;
+}
+
+/* Score arc */
+
+.score {
+  flex-shrink: 0;
+  width: 48px;
+  text-align: center;
+}
+
+.score svg {
+  display: block;
+}
+
+.score .num {
+  font-size: 0.95rem;
+  font-weight: 600;
+  fill: var(--ink);
+}
+
+.score .track {
+  stroke: var(--line-strong);
+}
+
+.score .arc {
+  stroke: var(--accent);
+  stroke-linecap: round;
+}
+
+.score .label {
+  margin-top: 0.3rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Card body */
+
+.card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-title {
+  display: inline-block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.12rem;
+  line-height: 1.35;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.card-title:hover {
+  color: var(--accent);
+}
+
+.card-meta {
+  margin-top: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.card-meta .dot {
+  color: var(--line-strong);
+}
+
+.card-why {
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+/* Tier pills */
+
+.tier {
+  display: inline-block;
+  padding: 0.08rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+}
+
+.tier-1 {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: #cfe1df;
+}
+
+.tier-2 {
+  background: #f0efea;
+  color: var(--ink-soft);
+}
+
+.tier-3 {
+  background: transparent;
+  color: var(--ink-faint);
+  border-color: var(--line-strong);
+}
