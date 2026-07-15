@@ -11,6 +11,7 @@ const momentumVerdict = document.getElementById('momentum-verdict');
 const momentumChartEl = document.getElementById('momentum-chart');
 const momentumAxisEl = document.getElementById('momentum-axis');
 const countryChartEl = document.getElementById('country-chart');
+const voicesListEl = document.getElementById('voices-list');
 
 function formatDate(dateStr) {
   const d = new Date(dateStr);
@@ -177,6 +178,84 @@ function renderArticles(articles, meta, trend) {
     results.appendChild(li);
   }
 }
+
+function voiceItemsBlock(label, items) {
+  const frag = document.createDocumentFragment();
+
+  const labelEl = document.createElement('div');
+  labelEl.className = 'voice-items-label';
+  labelEl.textContent = label;
+  frag.appendChild(labelEl);
+
+  const list = document.createElement('ul');
+  list.className = 'voice-items';
+  for (const item of items) {
+    const li = document.createElement('li');
+    li.className = 'voice-item';
+
+    const a = document.createElement('a');
+    a.href = item.link;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = item.title;
+
+    const date = document.createElement('span');
+    date.className = 'voice-item-date';
+    date.textContent = formatDate(item.date);
+
+    li.append(a, date);
+    list.appendChild(li);
+  }
+  frag.appendChild(list);
+  return frag;
+}
+
+function renderVoices(voices) {
+  voicesListEl.innerHTML = '';
+
+  for (const voice of voices) {
+    const hasPosts = voice.posts && voice.posts.length > 0;
+    const hasMentions = voice.mentions && voice.mentions.length > 0;
+    const collapsed = !hasPosts && !hasMentions;
+
+    const el = document.createElement('div');
+    el.className = collapsed ? 'voice collapsed' : 'voice';
+
+    const name = document.createElement('span');
+    name.className = 'voice-name';
+    name.textContent = voice.name;
+
+    const affiliation = document.createElement('span');
+    affiliation.className = 'voice-affiliation';
+    affiliation.textContent = voice.affiliation;
+
+    el.append(name, affiliation);
+
+    if (hasPosts) {
+      el.appendChild(voiceItemsBlock('Latest', voice.posts));
+    }
+    if (hasMentions) {
+      el.appendChild(voiceItemsBlock('In the news', voice.mentions));
+    }
+
+    voicesListEl.appendChild(el);
+  }
+}
+
+// Voices loads independently of the search form — it tracks people, not
+// search queries, and a failure here must never disturb the main search UI.
+async function loadVoices() {
+  try {
+    const res = await fetch('/api/voices');
+    if (!res.ok) return;
+    const data = await res.json();
+    renderVoices(data.voices || []);
+  } catch {
+    // Silent — Voices is secondary to the main search flow.
+  }
+}
+
+loadVoices();
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();

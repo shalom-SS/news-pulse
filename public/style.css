@@ -392,3 +392,120 @@ button:disabled {
   color: var(--ink-faint);
   border-color: var(--line-strong);
 }
+
+/* --- Voices --- */
+
+.voices {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line-strong);
+}
+
+.voices-head {
+  margin-bottom: 1.1rem;
+}
+
+.voices-head h2 {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.voices-sub {
+  margin: 0.25rem 0 0;
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+}
+
+.voices-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem 2rem;
+}
+
+@media (max-width: 620px) {
+  .voices-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.voice {
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--line);
+  font-size: 0.8rem;
+}
+
+.voice-name {
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.voice-affiliation {
+  display: block;
+  margin-top: 0.1rem;
+  color: var(--ink-faint);
+}
+
+.voice-items {
+  margin: 0.4rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.voice-items-label {
+  margin: 0.5rem 0 0.15rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.voice-items-label:first-child {
+  margin-top: 0.4rem;
+}
+
+.voice-item {
+  display: flex;
+  gap: 0.4rem;
+  align-items: baseline;
+  line-height: 1.35;
+}
+
+.voice-item a {
+  flex: 1;
+  min-width: 0;
+  color: var(--ink);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.voice-item a:hover {
+  color: var(--accent);
+}
+
+.voice-item-date {
+  flex-shrink: 0;
+  color: var(--ink-faint);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Collapsed: no feed, no mentions — recede further */
+
+.voice.collapsed {
+  opacity: 0.7;
+}
+
+.voice.collapsed .voice-name {
+  color: var(--ink-faint);
+  font-weight: 500;
+}

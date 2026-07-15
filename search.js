@@ -3,39 +3,17 @@
 // Shared by the local dev server (server.js) and the Vercel serverless
 // function (api/search.js) so both entrypoints stay in sync.
 
-import https from 'node:https';
 import { matchSource, WHITELISTED_SOURCES } from './sources.js';
 import { scoreArticle } from './scoring.js';
 import { momentumChart, coverageByCountry } from './trends.js';
-
-// --- Minimal XML helpers (no external dependencies) ---
-
-function decodeEntities(str) {
-  return str
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&apos;/g, "'")
-    .replace(/&amp;/g, '&');
-}
-
-function extractTag(block, tag) {
-  const match = block.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'i'));
-  if (!match) return '';
-  let value = match[1].trim();
-  // strip CDATA wrapper if present
-  const cdata = value.match(/^<!\[CDATA\[([\s\S]*?)\]\]>$/);
-  if (cdata) value = cdata[1];
-  return decodeEntities(value.trim());
-}
+import { decodeEntities, extractTag, fetchText } from './xml.js';
 
 function extractSourceUrl(block) {
   const match = block.match(/<source\s+url="([^"]*)"/i);
   return match ? decodeEntities(match[1]) : '';
 }
 
-function parseGoogleNewsRss(xml) {
+export function parseGoogleNewsRss(xml) {
   const items = xml.match(/<item>[\s\S]*?<\/item>/g) || [];
   return items.map((block) => {
     const sourceUrl = extractSourceUrl(block);
@@ -67,31 +45,11 @@ function withinRange(dateStr, days) {
 
 // --- Google News fetch ---
 
-function fetchGoogleNewsRss(query) {
-  return new Promise((resolve, reject) => {
-    const url = `https://news.google.com/rss/search?q=${encodeURIComponent(
-      query
-    )}&hl=en-US&gl=US&ceid=US:en`;
-
-    https
-      .get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
-        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          // follow redirect once
-          https
-            .get(res.headers.location, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res2) => {
-              let data = '';
-              res2.on('data', (chunk) => (data += chunk));
-              res2.on('end', () => resolve(data));
-            })
-            .on('error', reject);
-          return;
-        }
-        let data = '';
-        res.on('data', (chunk) => (data += chunk));
-        res.on('end', () => resolve(data));
-      })
-      .on('error', reject);
-  });
+export function fetchGoogleNewsRss(query) {
+  const url = `https://news.google.com/rss/search?q=${encodeURIComponent(
+    query
+  )}&hl=en-US&gl=US&ceid=US:en`;
+  return fetchText(url);
 }
 
 class SearchError extends Error {
