@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runSearch } from './search.js';
 import { getVoices } from './voicesFeed.js';
+import { getTrending } from './trending.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(__dirname, 'public');
@@ -51,6 +52,20 @@ const server = http.createServer(async (req, res) => {
       const status = err.status || 502;
       res.writeHead(status, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: err.message || 'Failed to fetch news' }));
+    }
+    return;
+  }
+
+  if (parsedUrl.pathname === '/api/trending') {
+    try {
+      const trending = await getTrending();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(trending));
+    } catch (err) {
+      // Trending is decorative — return an empty set rather than an error
+      // so the frontend quietly falls back to fixed chips.
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ phrases: [] }));
     }
     return;
   }

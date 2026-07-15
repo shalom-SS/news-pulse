@@ -1,10 +1,15 @@
 const form = document.getElementById('search-form');
 const input = document.getElementById('search-input');
 const dateRange = document.getElementById('date-range');
-const summary = document.getElementById('summary');
-const pickup = document.getElementById('pickup');
 const status = document.getElementById('status');
 const results = document.getElementById('results');
+const resultsSection = document.getElementById('results-section');
+const overview = document.getElementById('overview');
+const statStrip = document.getElementById('stat-strip');
+const gapCallout = document.getElementById('gap-callout');
+const trendingGroup = document.getElementById('trending-group');
+const trendingChips = document.getElementById('trending-chips');
+const fixedChips = document.getElementById('fixed-chips');
 const button = form.querySelector('button');
 const trends = document.getElementById('trends');
 const momentumVerdict = document.getElementById('momentum-verdict');
@@ -18,6 +23,75 @@ function formatDate(dateStr) {
   if (isNaN(d)) return dateStr;
   return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 }
+
+// --- Suggested search chips ---
+
+const FIXED_CHIPS = ['AI developments', 'AI hiring', 'AI agents', 'Tech layoffs', 'Developer skills'];
+// Shown in place of "Trending now" when extraction comes back too thin.
+const RESERVE_CHIPS = ['Semiconductors', 'Venture funding', 'Open source', 'India startups'];
+const TRENDING_CACHE_KEY = 'np-trending-v1';
+const TRENDING_CACHE_TTL_MS = 10 * 60 * 1000;
+
+function makeChip(label, onVoices = false) {
+  const chip = document.createElement('button');
+  chip.type = 'button';
+  chip.className = 'chip';
+  chip.textContent = label;
+  if (onVoices) {
+    const dot = document.createElement('span');
+    dot.className = 'chip-dot';
+    dot.title = 'Voices are on this too';
+    chip.appendChild(dot);
+  }
+  chip.addEventListener('click', () => {
+    input.value = label;
+    form.requestSubmit();
+  });
+  return chip;
+}
+
+function renderTrendingChips(phrases) {
+  if (phrases.length >= 3) {
+    trendingChips.innerHTML = '';
+    for (const p of phrases.slice(0, 5)) {
+      trendingChips.appendChild(makeChip(p.label, p.voices));
+    }
+    trendingGroup.hidden = false;
+  } else {
+    // Quiet fallback: never show junk — just widen the fixed set.
+    for (const label of RESERVE_CHIPS) {
+      fixedChips.appendChild(makeChip(label));
+    }
+  }
+}
+
+async function loadTrending() {
+  let phrases = null;
+  try {
+    const cached = JSON.parse(sessionStorage.getItem(TRENDING_CACHE_KEY));
+    if (cached && Date.now() - cached.ts < TRENDING_CACHE_TTL_MS) phrases = cached.phrases;
+  } catch {
+    // ignore bad cache
+  }
+  if (!phrases) {
+    try {
+      const res = await fetch('/api/trending');
+      if (res.ok) {
+        const data = await res.json();
+        phrases = data.phrases || [];
+        sessionStorage.setItem(TRENDING_CACHE_KEY, JSON.stringify({ ts: Date.now(), phrases }));
+      }
+    } catch {
+      // Trending is decorative — fall through to the fixed fallback.
+    }
+  }
+  renderTrendingChips(phrases || []);
+}
+
+for (const label of FIXED_CHIPS) {
+  fixedChips.appendChild(makeChip(label));
+}
+loadTrending();
 
 // Small circular progress arc showing the score, 0-100.
 function scoreArc(score) {
@@ -112,17 +186,56 @@ function renderCountryChart(coverage) {
   }
 }
 
+function stat(label, value, extraClass) {
+  const el = document.createElement('div');
+  el.className = 'stat';
+
+  const valueEl = document.createElement('div');
+  valueEl.className = extraClass ? `stat-value ${extraClass}` : 'stat-value';
+  valueEl.textContent = value;
+
+  const labelEl = document.createElement('div');
+  labelEl.className = 'stat-label';
+  labelEl.textContent = label;
+
+  el.append(valueEl, labelEl);
+  return el;
+}
+
+function renderOverview(articles, meta, trend) {
+  overview.hidden = false;
+  statStrip.innerHTML = '';
+
+  const verdict = trend ? trend.momentum.verdict : '—';
+  const topRow = trend && trend.coverageByCountry.find((r) => r.covered > 0);
+
+  statStrip.append(
+    stat('Results', String(articles.length)),
+    stat('Trusted sources', `${meta.sourcesCovered} of ${meta.totalSources}`),
+    stat('Momentum', verdict, verdict),
+    stat('Top country', topRow ? topRow.country : '—')
+  );
+
+  if (meta.sourcesCovered <= 3) {
+    gapCallout.textContent =
+      `Coverage gap: only ${meta.sourcesCovered} of ${meta.totalSources} trusted sources ` +
+      `are on this story — the conversation is happening outside mainstream press.`;
+    gapCallout.hidden = false;
+  } else {
+    gapCallout.hidden = true;
+  }
+}
+
 function renderArticles(articles, meta, trend) {
   results.innerHTML = '';
-  summary.hidden = false;
+
+  renderOverview(articles, meta, trend);
 
   if (trend) {
     trends.hidden = false;
     renderMomentum(trend.momentum);
     renderCountryChart(trend.coverageByCountry);
   }
-
-  pickup.innerHTML = `Covered by <strong>${meta.sourcesCovered}</strong> of my ${meta.totalSources} sources`;
 
   const parts = [`${articles.length} result${articles.length === 1 ? '' : 's'}`];
   if (meta.filteredOutBySource) {
@@ -131,8 +244,10 @@ function renderArticles(articles, meta, trend) {
   status.textContent = parts.join(' · ');
 
   if (articles.length === 0) {
+    resultsSection.hidden = true;
     return;
   }
+  resultsSection.hidden = false;
 
   for (const article of articles) {
     const li = document.createElement('li');
@@ -263,13 +378,12 @@ form.addEventListener('submit', async (e) => {
   if (!query) return;
 
   button.disabled = true;
-  status.textContent = '';
-  pickup.textContent = '';
-  summary.hidden = true;
+  overview.hidden = true;
+  gapCallout.hidden = true;
   trends.hidden = true;
+  resultsSection.hidden = true;
   results.innerHTML = '';
   status.textContent = 'Searching…';
-  summary.hidden = false;
 
   try {
     const range = dateRange.value;

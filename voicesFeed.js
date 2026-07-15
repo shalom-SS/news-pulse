@@ -60,6 +60,15 @@ async function getMentions(voice) {
   }
 }
 
+// Lightweight variant used by trending.js: feed posts only, no news
+// mentions, only for voices that actually have a verified feed.
+export async function getVoicesPosts() {
+  const tracked = VOICES.filter((v) => v.feedUrl);
+  return Promise.all(
+    tracked.map(async (voice) => ({ name: voice.name, posts: await getFeedPosts(voice) }))
+  );
+}
+
 // Fetches posts + mentions for every tracked voice in parallel. Never
 // throws — a failure for one person just means empty posts/mentions for
 // them, so the section degrades to a name + affiliation row.

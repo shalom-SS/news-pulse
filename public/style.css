@@ -52,12 +52,80 @@ main {
   color: var(--ink-faint);
 }
 
+/* --- Shared section labels --- */
+
+.section-label {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* --- Suggested search chips --- */
+
+.chips {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.1rem;
+}
+
+.chip-group {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.chip-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-right: 0.15rem;
+  white-space: nowrap;
+}
+
+.chip-set {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+button.chip {
+  padding: 0.22rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+}
+
+button.chip:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--surface);
+}
+
+.chip-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-left: 0.35rem;
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: 2px;
+}
+
 /* --- Search --- */
 
 #search-form {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
 }
 
 #search-input {
@@ -106,28 +174,87 @@ button:disabled {
   cursor: default;
 }
 
-/* --- Summary --- */
-
-.summary {
-  margin-bottom: 1.5rem;
-}
-
-.pickup {
-  margin: 0 0 0.2rem;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.05rem;
-  color: var(--ink);
-}
-
-.pickup strong {
-  color: var(--accent);
-  font-weight: 600;
-}
-
 .status {
-  margin: 0;
+  margin: 0.5rem 0 0;
+  min-height: 1.2rem;
   font-size: 0.85rem;
   color: var(--ink-faint);
+}
+
+/* --- Overview --- */
+
+.overview {
+  margin-top: 1.75rem;
+}
+
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+@media (max-width: 620px) {
+  .stat-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.stat {
+  padding: 0.8rem 0.9rem;
+  border-left: 1px solid var(--line);
+}
+
+.stat:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+
+@media (max-width: 620px) {
+  .stat:nth-child(odd) {
+    border-left: none;
+    padding-left: 0;
+  }
+}
+
+.stat-value {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.stat-value.rising {
+  color: var(--accent);
+}
+
+.stat-value.fading {
+  color: var(--negative);
+}
+
+.stat-value.steady {
+  color: var(--ink-soft);
+}
+
+.stat-label {
+  margin-top: 0.2rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.gap-callout {
+  margin-top: 0.9rem;
+  padding: 0.6rem 0.9rem;
+  border-left: 3px solid var(--negative);
+  background: #f7f0ea;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
 }
 
 /* --- Trends --- */
@@ -136,9 +263,7 @@ button:disabled {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  margin-bottom: 2rem;
-  padding-bottom: 1.75rem;
-  border-bottom: 1px solid var(--line-strong);
+  margin-top: 1.9rem;
 }
 
 @media (max-width: 620px) {
@@ -153,15 +278,6 @@ button:disabled {
   align-items: baseline;
   justify-content: space-between;
   margin-bottom: 0.65rem;
-}
-
-.trend-block h2 {
-  margin: 0;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
 }
 
 .verdict {
@@ -270,6 +386,12 @@ button:disabled {
 }
 
 /* --- Results --- */
+
+.results-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line-strong);
+}
 
 #results {
   list-style: none;
@@ -403,15 +525,6 @@ button:disabled {
 
 .voices-head {
   margin-bottom: 1.1rem;
-}
-
-.voices-head h2 {
-  margin: 0;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
 }
 
 .voices-sub {

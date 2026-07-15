@@ -155,4 +155,13 @@ export const VOICES = [
     feedUrl: null,
     newsQuery: 'Vidit Gujrathi AI',
   },
+  {
+    name: 'Vivek Ravisankar',
+    handle: 'vivekravisankar',
+    affiliation: 'CEO & co-founder, HackerRank',
+    // Author-scoped feed on the HackerRank blog — every item is
+    // dc:creator "Vivek Ravisankar" (the site-wide feed is not).
+    feedUrl: 'https://www.hackerrank.com/blog/author/vivek/feed/',
+    newsQuery: 'Vivek Ravisankar HackerRank',
+  },
 ];

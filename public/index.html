@@ -13,6 +13,17 @@
       <p class="tagline">Filtered to your trusted sources, ranked by quality.</p>
     </header>
 
+    <nav id="chips" class="chips" aria-label="Suggested searches">
+      <div id="trending-group" class="chip-group" hidden>
+        <span class="chip-label">Trending now</span>
+        <span id="trending-chips" class="chip-set"></span>
+      </div>
+      <div class="chip-group">
+        <span class="chip-label">Quick searches</span>
+        <span id="fixed-chips" class="chip-set"></span>
+      </div>
+    </nav>
+
     <form id="search-form">
       <input type="text" id="search-input" placeholder="Search a topic&hellip;" autocomplete="off" required>
       <select id="date-range" aria-label="Date range">
@@ -23,15 +34,18 @@
       <button type="submit">Search</button>
     </form>
 
-    <div id="summary" class="summary" hidden>
-      <p id="pickup" class="pickup"></p>
-      <p id="status" class="status"></p>
-    </div>
+    <p id="status" class="status"></p>
+
+    <section id="overview" class="overview" hidden>
+      <h2 class="section-label">Overview</h2>
+      <div id="stat-strip" class="stat-strip"></div>
+      <div id="gap-callout" class="gap-callout" hidden></div>
+    </section>
 
     <div id="trends" class="trends" hidden>
       <section class="trend-block">
         <div class="trend-head">
-          <h2>Momentum</h2>
+          <h2 class="section-label">Momentum</h2>
           <span id="momentum-verdict" class="verdict"></span>
         </div>
         <div id="momentum-chart" class="momentum-chart"></div>
@@ -40,17 +54,20 @@
 
       <section class="trend-block">
         <div class="trend-head">
-          <h2>Coverage by country</h2>
+          <h2 class="section-label">Coverage</h2>
         </div>
         <div id="country-chart" class="country-chart"></div>
       </section>
     </div>
 
-    <ul id="results"></ul>
+    <section id="results-section" class="results-section" hidden>
+      <h2 class="section-label">Results</h2>
+      <ul id="results"></ul>
+    </section>
 
     <section id="voices" class="voices">
       <div class="voices-head">
-        <h2>Voices</h2>
+        <h2 class="section-label">Voices</h2>
         <p class="voices-sub">Thought leaders tracked independent of your search.</p>
       </div>
       <div id="voices-list" class="voices-list"></div>
